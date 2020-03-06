@@ -1,5 +1,5 @@
 import os
-import googlefinance as gf
+from scraper import get_price
 from datetime import datetime
 import pandas as pd
 import twint as t
@@ -24,17 +24,14 @@ def session(stock, batch, wait):
     total_proc = 0
     final_sum = 0
 
-    all_final = []
     all_last = []
     all_times = []
+    all_qoutes = []
 
     while True:
         if os.path.exists('tweets.csv'):
             os.remove('tweets.csv')
-        # get time of iteration
-        now = datetime.now()
-        current_time = now.strftime("%Y-%m-%d %H:%M:%S")
-        all_times.append(current_time)
+
         # this is all config for our twitter scraper. this project would have been a lot easier if i had api keys, but
         # twitter kept rejecting my applications :( pro tip twitter, if you dont want people to scrape your python api,
         # make sure they also cant scrape your javascript api
@@ -47,10 +44,20 @@ def session(stock, batch, wait):
         c.Hide_output = True
         c.Lang = "en"
         t.run.Search(c)
+
         # keep the data in a pandas dataframe. we have to do make a csv first cause windows is garbage, so this ensures
         # cross-platform compatibility
         df = pd.read_csv('tweets.csv')
         os.remove('tweets.csv')
+
+        # get actual stock data
+        lp = float(get_price(stock=stock))
+        all_qoutes.append(lp)
+
+        # get time of iteration
+        now = datetime.now()
+        current_time = now.strftime("%Y-%m-%d %H:%M:%S")
+        all_times.append(current_time)
         print("Update complete at " + current_time + "!")
 
         # initialize current batch sum
@@ -66,31 +73,28 @@ def session(stock, batch, wait):
 
         # update the sum and calculate our final unweighted average
         final_sum = final_sum + cur_sum
-        final_avg = final_sum / (total_proc + int(batch))
-        print("Average of all tweets analyzed since " + init_time + " is " + str(final_avg))
         total_proc = total_proc + int(batch)
 
         # get dates, all the final avgs, and all last avgs and append them to lists
-        all_final.append(final_avg)
         all_last.append(last_batch_avg)
         dates = [dateutil.parser.parse(s) for s in all_times]
 
         # make our plot look a lil prettier, along with other basic graph config
+        fig, ax1 = plt.subplots()
         plt.subplots_adjust(bottom=0.2)
         plt.xticks(rotation=25)
-        # set our x values to dates
-        ax = plt.gca()
-        ax.set_xticks(dates)
-        xfmt = md.DateFormatter('%H:%M:%S')
-        ax.xaxis.set_major_formatter(xfmt)
 
-        # get actual stock data
-        gf.getQuotes('TSLA')
+        # set our x values to dates
+        ax1.set_xticks(dates)
+        xfmt = md.DateFormatter('%H:%M:%S')
+        ax1.xaxis.set_major_formatter(xfmt)
+        ax2 = ax1.twinx()
 
         # actually plot the stuff
-        plt.plot(dates, all_last, "o-")
-        plt.plot(dates, all_final, "r-")
+        ax1.plot(dates, all_qoutes, "y-")
+        ax2.plot(dates, all_last, "o-")
         plt.show(block=False)
+
         # no need to ddos twitter here
         plt.pause(int(wait))
         plt.close()

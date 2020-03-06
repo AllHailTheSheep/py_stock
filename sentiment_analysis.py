@@ -388,6 +388,15 @@ class SentimentIntensityAnalyzer(object):
         return valence
 
     @staticmethod
+    def _vibe_check(item):
+        # this isn't implemented yet, don't worry about it :)
+        if item:
+            print("vibe check passed")
+        else:
+            print('vibe check failed, exiting')
+            exit()
+
+    @staticmethod
     def _negation_check(valence, words_and_emoticons, start_i, i):
         words_and_emoticons_lower = [str(w).lower() for w in words_and_emoticons]
         if start_i == 0:
