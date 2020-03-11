@@ -58,7 +58,7 @@ if __name__ == '__main__':
      you want multidimensional measures of sentiment for a given sentence.""")
     print("----------------------------------------------------")
 
-    # input("\nPress Enter to continue the demo...\n")  # for DEMO purposes...
+    input("\nPress Enter to continue the demo...\n")
 
     tricky_sentences = ["Sentiment analysis has never been good.",
                         "Sentiment analysis has never been this good!",
@@ -83,7 +83,7 @@ if __name__ == '__main__':
         print("{:-<69} {}".format(sentence, str(vs)))
     print("----------------------------------------------------")
 
-    # input("\nPress Enter to continue the demo...\n")  # for DEMO purposes...
+    input("\nPress Enter to continue the demo...\n")
 
     print("----------------------------------------------------")
     print(
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     print("AVERAGE SENTIMENT FOR PARAGRAPH: \t" + str(round(paragraphSentiments / len(sentence_list), 4)))
     print("----------------------------------------------------")
 
-    # input("\nPress Enter to continue the demo...\n")  # for DEMO purposes...
+    input("\nPress Enter to continue the demo...\n")
 
     print("----------------------------------------------------")
     print(" - Analyze sentiment of IMAGES/VIDEO data based on annotation 'tags' or image labels. \n")

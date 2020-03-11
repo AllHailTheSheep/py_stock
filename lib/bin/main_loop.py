@@ -1,5 +1,6 @@
 import os
 from lib.bin.scraper import get_price
+from lib.bin.utils import *
 from datetime import datetime
 import pandas as pd
 import twint as t
@@ -7,6 +8,8 @@ from lib.sentiment.sentiment_analysis import SentimentIntensityAnalyzer
 import dateutil
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
+import aiohttp
+from retrying import retry
 
 
 # get date and format it to a standard
@@ -27,7 +30,6 @@ def session(stock, batch, wait):
     all_last = []
     all_times = []
     all_qoutes = []
-
     while True:
         if os.path.exists('tweets.csv'):
             os.remove('tweets.csv')
@@ -43,7 +45,10 @@ def session(stock, batch, wait):
         c.Output = 'tweets.csv'
         c.Hide_output = True
         c.Lang = "en"
-        t.run.Search(c)
+        try:
+            t.run.Search(c)
+        except aiohttp.ClientConnectionError:
+            print("Connection error, make sure you are connected to internet that lets you access Twitter!")
 
         # keep the data in a pandas dataframe. we have to do make a csv first cause windows is garbage, so this ensures
         # cross-platform compatibility
@@ -97,5 +102,6 @@ def session(stock, batch, wait):
         plt.show(block=False)
 
         # no need to ddos twitter here
-        plt.pause(int(wait))
+        plt.pause(int(wait)-3)
         plt.close()
+        firefox_proc_daemon()
