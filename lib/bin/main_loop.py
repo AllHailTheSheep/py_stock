@@ -1,9 +1,9 @@
 import os
-from scraper import get_price
+from lib.bin.scraper import get_price
 from datetime import datetime
 import pandas as pd
 import twint as t
-from sentiment_analysis import SentimentIntensityAnalyzer
+from lib.sentiment.sentiment_analysis import SentimentIntensityAnalyzer
 import dateutil
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
@@ -88,6 +88,7 @@ def session(stock, batch, wait):
         ax1.set_xticks(dates)
         xfmt = md.DateFormatter('%H:%M:%S')
         ax1.xaxis.set_major_formatter(xfmt)
+        # make other plot with same x-axis
         ax2 = ax1.twinx()
 
         # actually plot the stuff

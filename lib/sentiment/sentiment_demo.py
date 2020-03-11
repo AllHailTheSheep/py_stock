@@ -1,4 +1,4 @@
-from sentiment_analysis import SentimentIntensityAnalyzer
+from lib.sentiment.sentiment_analysis import SentimentIntensityAnalyzer
 import requests
 import json
 

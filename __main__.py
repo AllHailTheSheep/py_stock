@@ -1,4 +1,4 @@
-from main_loop import session
+from lib.bin.main_loop import session
 
 to_search = input("Stock to search for: ")
 batch_size = input("Number of tweets to fetch at once (minimum 20): ")
